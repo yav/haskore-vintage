@@ -23,7 +23,7 @@ Extra-source-files:
 
 Library
   hs-source-dirs: src
-  Build-depends: base
+  Build-depends: base < 5
   Exposed-modules:
     Haskore
     Haskore.Basics
