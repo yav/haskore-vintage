@@ -7,8 +7,10 @@ Maintainer:     diatchki@galois.com
 Homepage:       http://haskell.org/haskore/
 Category:       Music
 Synopsis:       The February 2000 version of Haskore.
+Description:    The February 2000 version of Haskore.
 Build-type:     Simple
-Cabal-version: >= 1.2
+Cabal-version: >= 1.6
+tested-with: GHC == 7.10.2, GHC == 7.8.4
 
 Extra-source-files:
   Readme
