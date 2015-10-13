@@ -19,6 +19,9 @@ module Haskore.Monads(
 	CPS,    runCPS, callcc, getcc
 	) where
 
+import Control.Monad(ap)
+import qualified Control.Applicative as A
+
 ----------------------------------------------------------------
 -- For each type defined in this module we provide:
 --
@@ -54,6 +57,10 @@ getSR :: SR s s
 	   
 instance Functor (SR s) where fmap f xs = do x <- xs; return (f x)
 
+instance A.Applicative (SR s) where
+  pure  = return
+  (<*>) = ap
+
 instance Monad (SR s) where
   m >>= k  = SR (\s -> case (unSR m) s of a -> (unSR (k a)) s)
   m >>  k  = SR (\s -> case (unSR m) s of _ -> (unSR k) s)
@@ -78,6 +85,10 @@ setS    :: s -> State s ()
 getS    :: State s s
 	   
 instance Functor (State s) where fmap f xs = do x <- xs; return (f x)
+
+instance A.Applicative (State s) where
+  pure  = return
+  (<*>) = ap
 
 instance Monad (State s) where
   m >>= k  = S (\s -> case (unS m) s of (a,s') -> (unS (k a)) s')
@@ -106,6 +117,10 @@ modIOS :: (s -> s) -> IOS s s
 
 instance Functor (IOS s) where fmap f xs = do x <- xs; return (f x)
 
+instance A.Applicative (IOS s) where
+  pure  = return
+  (<*>) = ap
+
 instance Monad   (IOS s) where
  m >>= k  = IOS (\s -> unIOS m s >>= \(a,s') -> unIOS (k a) s')
  m >>  k  = IOS (\s -> unIOS m s >>= \(_,s') -> unIOS k s')
@@ -126,6 +141,12 @@ unIOS (IOS m) = m
 ----------------------------------------------------------------
 
 newtype Output s a = O (a, [s] -> [s])
+
+instance A.Applicative (Output s) where
+  pure  = return
+  (<*>) = ap
+
+
 
 runO    :: Output s a -> (a, [s])
 outO    :: [s] -> Output s ()
@@ -155,6 +176,10 @@ callcc :: r -> CPS r a
 getcc  :: ((a -> r) -> CPS r a) -> CPS r a
 
 instance Functor (CPS s) where fmap f xs = do x <- xs; return (f x)
+
+instance A.Applicative (CPS s) where
+  pure  = return
+  (<*>) = ap
 
 instance Monad (CPS r) where
   m >>= k  = CPS (\c -> unCPS m (\a -> unCPS (k a) c)) 

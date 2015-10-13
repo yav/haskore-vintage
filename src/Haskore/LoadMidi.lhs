@@ -15,6 +15,7 @@ the file.
 > import Haskore.Utils (unlinesS, rightS, concatS)
 > import Data.Maybe (fromJust)
 > import Control.Monad
+> import Control.Applicative
 
 \end{verbatim}
 
@@ -511,6 +512,13 @@ these things:
 > tokenP get   = P $ get
 > runP m (s,st,sz) = (unP m) (s,st,sz)
 >
+> instance Functor (Parser s w c sz) where
+>   fmap = liftM
+>
+> instance Applicative (Parser s w c sz) where
+>   pure  = return
+>   (<*>) = ap
+>
 > instance Monad (Parser s w c sz) where
 >   m >>= k  = P $ \ (s,st,sz) -> do
 >                                      (a,s',st',sz') <- unP m (s,st,sz)
@@ -536,7 +544,11 @@ these things:
 > readSize = P $ \ (s,st,sz) -> return (sz,s,st,sz)
 >
 > -- instance MonadZero (Parser s w c sz) where
-> 
+>
+> instance Alternative (Parser s w c sz) where
+>   empty = mzero
+>   (<|>) = mplus
+>
 > instance MonadPlus (Parser s w c sz) where
 >   mzero = P $ \ (s,st,sz) -> mzero
 >   p `mplus` q = P $ \ (s,st,sz) -> unP p (s,st,sz) `mplus` unP q (s,st,sz)

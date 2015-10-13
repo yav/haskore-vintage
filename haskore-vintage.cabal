@@ -1,5 +1,5 @@
 Name:           haskore-vintage
-Version:        0.2
+Version:        0.3
 License:        BSD3
 License-file:   LICENSE
 Author:         Paul Hudak
@@ -43,4 +43,10 @@ Library
     Haskore.Loader
     Haskore.Monads
     Haskore.Utils
+
+source-repository head
+  type:     git
+  location: https://github.com/yav/haskore-vintage
+
+
 
